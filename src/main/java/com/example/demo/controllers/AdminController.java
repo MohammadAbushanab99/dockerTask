@@ -88,50 +88,58 @@ public class AdminController {
         return "admin";
     }
 //
-//    @PostMapping("/Admin/addCourse")
-//    public String addCourse(@RequestParam("CourseId") String courseName,
-//                            @RequestParam("InstructorIdCourse") String instructorIdCourse) {
-//        Map<String, String> instructors = userDao.getInstructor();
+    @PostMapping("/login/admin/addCourse")
+    public String addCourse(@RequestParam("CourseName") String courseName,
+                            @RequestParam("InstructorIdCourse") String instructorIdCourse,Model model) {
+        Map<String, String> instructors = userDao.getInstructor();
+
+        if (courseName != null && !courseName.isEmpty()) {
+            if (instructorIdCourse != null && !instructorIdCourse.isEmpty()) {
+                if (instructors.containsKey(instructorIdCourse)) {
+                    adminDao.insertNewCourse(courseName, instructorIdCourse);
+                    model.addAttribute("addCourse", "added successfully");
+                }else {
+                    model.addAttribute("addCourse", "instructor not exits");
+                }
+            }
+        }else {
+            model.addAttribute("addCourse", "inputs are required");
+        }
+
+        return "admin";
+    }
 //
-//        if (courseName != null && !courseName.isEmpty()) {
-//            if (instructorIdCourse != null && !instructorIdCourse.isEmpty()) {
-//                if (instructors.containsKey(instructorIdCourse)) {
-//                    adminDao.insertNewCourse(courseName, instructorIdCourse);
-//                }
-//            }
-//        }
+    @PostMapping("/login/admin/addStudent")
+    public String addStudent(@RequestParam("StudentName") String studentName,
+                             @RequestParam("StudentMajor") String studentMajor,
+                             @RequestParam("selectedCourseId") int selectedCourseId,
+                             Model model) {
+        List<Course> courses = courseDao.getCoursesInformation();
+
+        if (studentName != null && !studentName.isEmpty()) {
+            if (studentMajor != null && !studentMajor.isEmpty()) {
+                String studentId;
+                if (!userDao.checkIfUserInputExist("students", studentName)) {
+                    studentId = adminDao.insertNewStudent(studentName, studentMajor);
+                    model.addAttribute("addStudent", "added new student successfully");
+                } else {
+                    studentId = userDao.getUserId("students", studentName);
+                }
+                Course selectedCourse = getCourseById(selectedCourseId, courses);
+                adminDao.addStudentToCourse(studentId, selectedCourse);
+                model.addAttribute("addStudent", "added new student successfully to "+ selectedCourse.getCourseName());
+            }
+        }
+
+        return "admin";
+    }
 //
-//        return "redirect:/Admin";
-//    }
-//
-//    @PostMapping("/Admin/addStudent")
-//    public String addStudent(@RequestParam("StudentName") String studentName,
-//                             @RequestParam("StudentMajor") String studentMajor,
-//                             @RequestParam("selectedCourseId") int selectedCourseId) {
-//        List<Course> courses = courseDao.getCoursesInformation();
-//
-//        if (studentName != null && !studentName.isEmpty()) {
-//            if (studentMajor != null && !studentMajor.isEmpty()) {
-//                String studentId;
-//                if (!userDao.checkIfUserInputExist("students", studentName)) {
-//                    studentId = adminDao.insertNewStudent(studentName, studentMajor);
-//                } else {
-//                    studentId = userDao.getUserId("students", studentName);
-//                }
-//                Course selectedCourse = getCourseById(selectedCourseId, courses);
-//                adminDao.addStudentToCourse(studentId, selectedCourse);
-//            }
-//        }
-//
-//        return "redirect:/Admin";
-//    }
-//
-//    private Course getCourseById(int courseId, List<Course> courses) {
-//        for (Course c : courses) {
-//            if (c.getId() == courseId) {
-//                return c;
-//            }
-//        }
-//        return courses.get(0);
-//    }
+    private Course getCourseById(int courseId, List<Course> courses) {
+        for (Course c : courses) {
+            if (c.getId() == courseId) {
+                return c;
+            }
+        }
+        return courses.get(0);
+    }
 }

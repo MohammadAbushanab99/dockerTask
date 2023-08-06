@@ -161,9 +161,10 @@
             </div>
         </div>
 
-        <form action="/admin" method="post">
+        <form action="/login/admin/addCourse" method="post">
             <p>Course Name : <input type="text" id="Course1" name="CourseName" ></p>
             <p>Instructor Id : <input type="text" id="Instructor1" name="InstructorIdCourse" ></p>
+            <p><font color="red"    th:text="${addCourse}"></font></p>
             <button type="submit">Submit</button>
         </form>
     </div>
@@ -177,10 +178,11 @@
             <hr>
             </p>
 
-        <form action="/admin" method="post">
+        <form action="/login/admin/addStudent" method="post">
             <p>Student Name: <input type="text" id="StudentName" name="StudentName"></p>
             <p>Student major: <input type="text" id="StudentMajor" name="StudentMajor"></p>
             <p>Course ID: <input type="text" id="Course2" name="selectedCourseId"></p>
+            <p><font color="red"    th:text="${addStudent}"></font></p>
             <button type="submit">Submit</button>
         </form>
     </div>
