@@ -11,10 +11,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpSession;
+
 @Controller
 public class LoginController {
     private final User userDao;
-
+    ModelAndView modelAndView = new ModelAndView();
     @Autowired
     public LoginController(User userDao) {
         this.userDao = userDao;
@@ -22,8 +24,9 @@ public class LoginController {
 
     @GetMapping("/login")
     public ModelAndView showLoginForm() {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("login1"); // Use the .jsp extension
+
+
+        modelAndView.setViewName("login");
         return modelAndView;
 
     }
@@ -31,70 +34,32 @@ public class LoginController {
     @PostMapping("/login")
     public String processLogin(@RequestParam("id") String id,
                                @RequestParam("password") String password,
-                               Model model) {
+                               Model model,
+                               HttpSession session) {
 
         String userType = userDao.checkUserInput(id, password);
         System.out.println(userType);
         if (userType != null && !userType.isEmpty()) {
 
-            model.addAttribute("errorMessage", "hi");
-            return "login";
-//            switch (userType) {
-//                case "Instructor":
-//                    return "redirect:/instructor";
-//                case "admin":
-//                    return "redirect:/admin";
-//                case "Student":
-//                    return "redirect:/student";
-//                default:
-//                    model.addAttribute("errorMessage", "Invalid User Type!");
-//                    return "html1";
-//            }
+            switch (userType) {
+                case "Instructor":
+                    return "instructor";
+                case "admin":
+                    session.setAttribute("id", id);
+                   return  "redirect:/login/admin";
+                case "Student":
+                    return "student";
+                default:
+                    model.addAttribute("errorMessage", "Invalid User Type!");
+                    return "login";
+            }
         } else {
             model.addAttribute("errorMessage", "Invalid Credentials!!");
             return "login";
         }
     }
+
+
 }
 
-//@Controller
-//public static class LoginController {
-//
-//    //    private final UserDao userDao;
-//    //    public LoginController(UserDao userDao) {
-//    //        this.userDao = userDao;
-//    //    }
-//
-//
-//    @GetMapping("/login")
-//    public String showLoginForm() {
-//        return "login"; //
-//    }
-//
-//
-//    //    @PostMapping("/login")
-//    //    public String processLogin(@RequestParam("id") String id,
-//    //                               @RequestParam("password") String password,
-//    //                               Model model) {
-//    //
-//    //        UserDao userDao = null;
-//    //        String userType = userDao.checkUserInput(id, password);
-//    //        if (userType != null && !userType.isEmpty()) {
-//    //
-//    //            switch (userType) {
-//    //                case "Instructor":
-//    //                    return "redirect:/instructor";
-//    //                case "admin":
-//    //                    return "redirect:/admin";
-//    //                case "Student":
-//    //                    return "redirect:/student";
-//    //                default:
-//    //                    model.addAttribute("errorMessage", "Invalid User Type!");
-//    //                    return "login";
-//    //            }
-//    //        } else {
-//    //            model.addAttribute("errorMessage", "Invalid Credentials!!");
-//    //            return "login";
-//    //        }
-//    //    }
-//}
+

@@ -1,9 +1,9 @@
 <html>
 
 <head>
-    <title>Instructor Page</title>
+<title>Instructor Page</title>
 </head>
-<style>
+  <style>
       @import url(https://fonts.googleapis.com/css?family=Roboto:300);
      body, h1, h2, p, ul, li, button {
          margin: 0;
@@ -123,71 +123,48 @@
         -moz-osx-font-smoothing: grayscale;
       }
     </style>
-<div class="info-container">
-    <p><strong>Instructor ID: <span id="instructorId"></span></strong></p>
-    <p><strong>Name: <span id="instructorName"></span></strong></p>
-</div>
-<div class="container">
-    <h2>Select an option:</h2>
-    <ul class="options">
-        <li><a href="#" class="option-btn" onclick="showContent('courseInfoContainer')">See My Courses Information</a></li>
-        <li><a href="#" class="option-btn" onclick="showContent('gradesAndStudentsContainer')">See Grades and My Students Information</a></li>
-        <!-- Add other options as needed -->
-    </ul>
-    <a href="logout" class="logout-btn">Log Out</a>
-    <div id="courseInfoContainer" class="result-container" style="display: none;">
-        <h2>Course Information</h2>
-        <div id="courseList">
-            <script>
+ <div class="info-container">
+     <p><strong>Instructor ID: <span id="instructorId"></span></strong></p>
+     <p><strong>Name: <span id="instructorName"></span></strong></p>
+ </div>
+ <div class="container">
+     <h2>Select an option:</h2>
+     <ul class="options">
+         <li><a href="#" class="option-btn" onclick="showContent('courseInfoContainer')">See My Courses Information</a></li>
+         <li><a href="#" class="option-btn" onclick="showContent('gradesAndStudentsContainer')">See Grades and My Students Information</a></li>
+         <!-- Add other options as needed -->
+     </ul>
+     <a href="logout" class="logout-btn">Log Out</a>
+     <div id="courseInfoContainer" class="result-container" style="display: none;">
+         <!-- Show course information here -->
+         <h2>Course Information</h2>
+         <div id="courseList"></div>
+     </div>
+     <div id="gradesAndStudentsContainer" class="result-container" style="display: block;">
+         <!-- Show grades and students information here -->
+         <h3>Select a Course:</h3>
+         <select name="selectedCourseId" id="courseSelect"></select>
+         <button type="button" onclick="showCourseInfo()">Show Course Grades and Students Information</button>
 
-      function showCourseInfo() {
-      var courseList = model.getAttribute("courseList");
-        var html = "";
-        for (var i = 0; i < courseList.length; i++) {
-          html += `
-            <p>Course ID: ${courseList[i].id}</p>
-            <p>Course Name: ${courseList[i].courseName}</p>
-            <p>Number of Students: ${courseList[i].numberOfStudents}</p>
-            <hr>
-          `;
-        }
-
-        var courseInfoContainer = document.getElementById("courseInfoContainer");
-        courseInfoContainer.innerHTML = html;
-        courseInfoContainer.style.display = "block";
-      }
-
-      document.getElementById("showCourseInfoButton").addEventListener("click", showCourseInfo);
-    </script>
-
-            <button id="showCourseInfoButton">Show Course Info</button>
-        </div>
-    </div>
-    <div id="gradesAndStudentsContainer" class="result-container" style="display: block;">
-        <!-- Show grades and students information here -->
-        <h3>Select a Course:</h3>
-        <select name="selectedCourseId" id="courseSelect"></select>
-        <button type="button" onclick="showCourseInfo()">Show Course Grades and Students Information</button>
-
-        <h3>Selected Course Information:</h3>
-        <p><strong>Course ID:</strong> <span id="selectedCourseId"></span></p>
-        <p><strong>Course Name:</strong> <span id="selectedCourseName"></span></p>
-        <h3>Students and Remarks:</h3>
-        <table>
-            <tr>
-                <th>Student ID</th>
-                <th>Student Name</th>
-                <th>Remarks 1</th>
-                <th>Remarks 2</th>
-                <th>Final Grade</th>
-                <th>Total Grade</th>
-                <th>Actions</th>
-            </tr>
-            <tbody id="studentsTableBody"></tbody>
-        </table>
-    </div>
-</div>
-<script>
+         <h3>Selected Course Information:</h3>
+         <p><strong>Course ID:</strong> <span id="selectedCourseId"></span></p>
+         <p><strong>Course Name:</strong> <span id="selectedCourseName"></span></p>
+         <h3>Students and Remarks:</h3>
+         <table>
+             <tr>
+                 <th>Student ID</th>
+                 <th>Student Name</th>
+                 <th>Remarks 1</th>
+                 <th>Remarks 2</th>
+                 <th>Final Grade</th>
+                 <th>Total Grade</th>
+                 <th>Actions</th>
+             </tr>
+             <tbody id="studentsTableBody"></tbody>
+         </table>
+     </div>
+ </div>
+ <script>
      function showContent(contentId) {
          const allContainers = document.getElementsByClassName('result-container');
          for (let i = 0; i < allContainers.length; i++) {
