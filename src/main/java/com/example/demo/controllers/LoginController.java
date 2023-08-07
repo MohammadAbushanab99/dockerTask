@@ -43,7 +43,8 @@ public class LoginController {
 
             switch (userType) {
                 case "Instructor":
-                    return "instructor";
+                    session.setAttribute("id", id);
+                    return  "redirect:/login/instructor";
                 case "admin":
                     session.setAttribute("id", id);
                    return  "redirect:/login/admin";

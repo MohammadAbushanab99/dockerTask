@@ -15,7 +15,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 @Profile("database")
-public class Instructor {
+public class Instructor implements InstructorDao{
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -25,6 +25,7 @@ public class Instructor {
     }
 
 
+    @Override
     public String getExamType(int id) {
         String name = null;
         try {
@@ -36,7 +37,7 @@ public class Instructor {
         return name;
     }
 
-
+    @Override
     public List<Grade> getStudentsInformation(Course course, String instructorId) {
         List<Grade> studentGrades = new ArrayList<>();
 
@@ -61,6 +62,7 @@ public class Instructor {
         return studentGrades;
     }
 
+    @Override
     public void addCourseCriteria(String gradeType, String examType, Course course) {
         int gradeTypeId, examTypeId;
         String query = "UPDATE COURSES SET exam_type_id = ?, grad_type_id = ? WHERE id = ? AND instructor_id = ?";
@@ -88,7 +90,8 @@ public class Instructor {
         }
     }
 
-    protected void addGradesForStudents(Course course, Grade grade) {
+    @Override
+    public void addGradesForStudents(Course course, Grade grade) {
         String examTypeColumn, firstExamColumn, secondExamColumn, finalExamColumn;
         if (course.getExamType() == 1) {
             firstExamColumn = "mid_exam";
@@ -133,6 +136,7 @@ public class Instructor {
         }
         }
 
+    @Override
     public void getStudentsInformation(String studentId, List<StudentGrade> studentGrades, List<StudentCourse> studentCourses) {
         String query = "SELECT first_exam, second_exam, final_exam, mid_exam, quizzes, total_grade, id_course, instructor_id " +
                 "FROM grade WHERE student_id = ?";
@@ -146,12 +150,12 @@ public class Instructor {
                 for (Map<String, Object> row : rows) {
                     String instructorId = (String) row.get("instructor_id");
                     int courseId = (int) row.get("id_course");
-                    int firstExam = (Integer) row.get("first_exam");
-                    int secondExam = (Integer) row.get("second_exam");
-                    int finalExam = (Integer) row.get("final_exam");
-                    int midExam = (Integer) row.get("mid_exam");
-                    int quizzes = (Integer) row.get("quizzes");
-                    int totalGrade = (Integer) row.get("total_grade");
+                    int firstExam = (int) row.get("first_exam");
+                    int secondExam = (int) row.get("second_exam");
+                    int finalExam = (int) row.get("final_exam");
+                    int midExam = (int) row.get("mid_exam");
+                    int quizzes = (int) row.get("quizzes");
+                    int totalGrade = (int) row.get("total_grade");
 
                         StudentCourse course = getCoursesInformation(courseId, studentCourses,jdbcTemplate);
 

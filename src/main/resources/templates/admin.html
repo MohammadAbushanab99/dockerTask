@@ -170,7 +170,10 @@
     </div>
 
     <div id="AddStudent" class="result-container" style="display: none;">
-        <h2>Course Information</h2>
+
+
+        <form action="/login/admin/addStudent" method="post">
+            <h2>Course Information</h2>
             <p th:each="course : ${courseList}">
                 Course ID: <span th:text="${course.id}"></span><br>
                 Course Name: <span th:text="${course.courseName}"></span><br>
@@ -178,7 +181,6 @@
             <hr>
             </p>
 
-        <form action="/login/admin/addStudent" method="post">
             <p>Student Name: <input type="text" id="StudentName" name="StudentName"></p>
             <p>Student major: <input type="text" id="StudentMajor" name="StudentMajor"></p>
             <p>Course ID: <input type="text" id="Course2" name="selectedCourseId"></p>
@@ -190,16 +192,18 @@
 </div>
 
 <script>
-        function showContent(contentId) {
-            const allContainers = document.getElementsByClassName('result-container');
-            for (let i = 0; i < allContainers.length; i++) {
-                allContainers[i].style.display = 'none';
+    function showContent(contentId) {
+        const allContainers = document.getElementsByClassName('result-container');
+        for (let i = 0; i < allContainers.length; i++) {
+            const container = allContainers[i];
+            if (container.id === contentId) {
+                container.style.display = container.style.display === 'block' ? 'none' : 'block';
+            } else {
+                container.style.display = 'none';
             }
-            const containerToShow = document.getElementById(contentId);
-            containerToShow.style.display = 'block';
         }
-
-    </script>
+    }
+</script>
 
     </body>
 </html>

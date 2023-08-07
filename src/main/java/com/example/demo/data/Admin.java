@@ -6,6 +6,8 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 @Profile("database")
 public class Admin implements AdminDao{
@@ -125,17 +127,19 @@ public class Admin implements AdminDao{
         String lastId = null;
 
         try {
-            String query = "SELECT id, user_id\n" +
+            String query = "SELECT user_id\n" +
                     "FROM users\n" +
                     "WHERE user_type_id = ?\n" +
                     "AND id = (SELECT MAX(id) FROM users WHERE user_type_id = ? AND user_id = users.user_id);";
-            lastId = jdbcTemplate.queryForObject(query, new Object[]{userTypeId, userTypeId}, String.class);
-            if (lastId == null) {
-                if (userTypeId == 2)
-                    lastId = "0";
-                else
-                    lastId = "1";
-            }
+            String generatedUserId = jdbcTemplate.queryForObject(query, String.class, userTypeId, userTypeId);
+            return generateUserId(userTypeId, generatedUserId);
+//            queryForObject(query, Integer.class, id, password)
+//             = jdbcTemplate.query(query, new Object[]{userTypeId, userTypeId}, (rs, rowNum) -> {
+//                String id = rs.getString("id");
+//                String userId = rs.getString("user_id");
+//                return generateUserId(userTypeId, userId);
+//            });
+
         } catch (Exception e) {
             if (userTypeId == 2)
                 lastId = "0";

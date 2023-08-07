@@ -43,37 +43,10 @@ public class AdminController {
         model.addAttribute("InstructorList", instructors);
         return "admin";
     }
-//    @GetMapping("/admin")
-//    public ModelAndView adminInterface(Model model, HttpSession session) {
-//        ModelAndView modelAndView = new ModelAndView();
-//        modelAndView.setViewName("admin");
-//        System.out.println("Admin endpoint accessed!");
-//
-//        return modelAndView;
-////        Map<String, String> instructors = userDao.getInstructor();
-////        String id = (String) session.getAttribute("id");
-////        System.out.println("hello"+id );
-////
-////
-////        String password = (String) session.getAttribute("password");
-////
-////        if (id != null && !id.isEmpty()) {
-////            model.addAttribute("id", id);
-////        }
-////
-////        model.addAttribute("InstructorList", instructors);
-////
-//////        List<Course> courses = courseDao.getCoursesInformation();
-//////        model.addAttribute("courseList", courses);
-////
-////        return "Admin";
-//
-//    }
-//
+
     @PostMapping("/login/admin/addInstructors")
     public String addInstructor(@RequestParam("InstructorName") String instructorName,Model model) {
-        Map<String, String> instructors = userDao.getInstructor();
-        System.out.println("abushanb");
+
         if (instructorName != null && !instructorName.isEmpty()) {
             if (userDao.checkIfUserInputExist("instructors", instructorName)) {
                 model.addAttribute("addInstructor", "name is already exist");
@@ -87,7 +60,7 @@ public class AdminController {
 
         return "admin";
     }
-//
+
     @PostMapping("/login/admin/addCourse")
     public String addCourse(@RequestParam("CourseName") String courseName,
                             @RequestParam("InstructorIdCourse") String instructorIdCourse,Model model) {
@@ -108,7 +81,7 @@ public class AdminController {
 
         return "admin";
     }
-//
+
     @PostMapping("/login/admin/addStudent")
     public String addStudent(@RequestParam("StudentName") String studentName,
                              @RequestParam("StudentMajor") String studentMajor,
@@ -133,7 +106,7 @@ public class AdminController {
 
         return "admin";
     }
-//
+
     private Course getCourseById(int courseId, List<Course> courses) {
         for (Course c : courses) {
             if (c.getId() == courseId) {
