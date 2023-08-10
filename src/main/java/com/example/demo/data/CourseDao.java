@@ -11,4 +11,7 @@ public interface CourseDao {
     public List<Course> getCoursesInformation(String id);
 
 
+    public String getCourseName(int id);
+
+
 }

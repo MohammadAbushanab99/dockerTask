@@ -129,7 +129,7 @@
     </style>
 <div class="info-container">
     <p><strong>Admin</strong></p>
-    <p><strong>id : <strong th:text="${id}"></strong> </p>
+    <p><strong>id : <strong th:text="${id}"></strong></p>
 
     <p><font color="red"    th:text="${errorMessage}">aaa</font></p>
 </div>
@@ -153,10 +153,10 @@
 
     <div id="AddCourse" class="result-container" style="display: none;">
         <h2>Instructor Informations</h2>
-        <div th:if="${not #lists.isEmpty(InstructorList)}">
-            <div th:each="instructorEntry : ${InstructorList}">
-                <p>Instructor ID: <span th:text="${instructorEntry.key}"></span></p>
-                <p>Instructor Name: <span th:text="${instructorEntry.value}"></span></p>
+        <div th:if="${not #lists.isEmpty(courseMap)}">
+            <div th:each="courseMapEntry : ${courseMap}">
+                <p>Course Name: <span th:text="${courseMapEntry.key}"></span></p>
+                <p>Instructor Name: <span th:text="${courseMapEntry.value}"></span></p>
                 <hr>
             </div>
         </div>

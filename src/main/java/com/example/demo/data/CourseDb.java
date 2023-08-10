@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 @Profile("database")
-public class CourseDb {
+public class CourseDb implements CourseDao {
 
 
     private final JdbcTemplate jdbcTemplate;
@@ -21,7 +21,7 @@ public class CourseDb {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-
+    @Override
     public  List<Course> getCoursesInformation() {
         List<Course> courses = new ArrayList<>();
         try {
@@ -41,12 +41,12 @@ public class CourseDb {
         }
         return courses;
     }
-
+    @Override
     public List<Course> getCoursesInformation(String id) {
         List<Course> courses = new ArrayList<>();
         try {
             String query = "SELECT id, course_name, instructor_id, number_of_students, exam_type_id, grad_type_id FROM courses WHERE instructor_id = ?";
-            courses = jdbcTemplate.query(query, new Object[]{id}, (rs, rowNum) -> {
+            courses = jdbcTemplate.query(query, (rs, rowNum)  -> {
                 int courseId = rs.getInt("id");
                 String courseName = rs.getString("course_name");
                 String instructorId = rs.getString("instructor_id");
@@ -55,10 +55,22 @@ public class CourseDb {
                 int gradeType = rs.getInt("grad_type_id");
 
                 return new Course(courseId, courseName, numbersOfStudents, examType, gradeType, instructorId);
-            });
+            } ,id);
         } catch (Exception e) {
             e.printStackTrace();
         }
         return courses;
+    }
+
+    @Override
+    public String getCourseName(int id) {
+        String name = "";
+        try {
+            String query = "SELECT course_name FROM courses WHERE id = ?";
+            name = jdbcTemplate.queryForObject(query, String.class, id);;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return name;
     }
 }

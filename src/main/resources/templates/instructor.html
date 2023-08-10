@@ -1,6 +1,4 @@
-
-<html xmlns:th="http://www.w3.org/1999/xhtml">
-<html xmlns:th="http://www.thym eleaf.org">
+<html xmlns:th="http://www.thym eleaf.org" xmlns="http://www.w3.org/1999/html">
 <html>
 
 <head>
@@ -129,8 +127,8 @@
       }
     </style>
 <div class="info-container">
-    <p><strong>Instructor ID: <span id="instructorId"></span></strong></p>
-    <p><strong>Name: <span id="instructorName"></span></strong></p>
+    <p><strong>Instructor ID: <span id="instructorId" th:text="${instructorId}"></span></strong></p>
+    <p><strong>Name: <span th:text="${instructorName}"></span></strong></p>
 </div>
 
 <div class="container">
@@ -139,7 +137,7 @@
         <li><button class="option-btn" onclick="showContent('courseInfoContainer')">See My Courses Information</button></li>
         <li><button class="option-btn" onclick="showContent('gradesAndStudentsContainer')">>See Grades and My Students Information</button></li>
         <li><button class="option-btn" onclick="showContent('AddCourseCriteria')">Add Course Criteria</button></li>
-        <li><button class="option-btn" onclick="showContent('CalculateStatisticalData')">Calculate Statistical Data</button></li>
+        <li><button class="option-btn" onclick="showContent('CalculateStatisticalData')">see grades</button></li>
     </ul>
     <a href="logout" class="logout-btn">Log Out</a>
     <div id="courseInfoContainer" class="result-container" style="display: none;">
@@ -161,87 +159,125 @@
                  <option th:each="course : ${courseList}" th:value="${course.id}" th:text="${course.courseName}"></option>
              </select>
              <button type="submit" >Show Course Grades and Students Information</button>
+
+
+        <h3>Selected Course Information:</h3>
+        <p><strong>Course ID:</strong> <span th:text="${selectedCourseId}"  id="courseIdSpan"></span></p>
+        <p><strong>Course Name:</strong> <span th:text="${selectedCourseName}"></span></p>
+        <h3>Students and Remarks:</h3>
+            <div>
+                <table>
+                    <thead>
+                    <tr>
+                        <td>Student ID</td>
+                        <td>Student Name</td>
+                        <td th:text="${remarks1}">Remarks 1</td>
+                        <td th:text="${remarks2}">Remarks 2</td>
+                        <td>Final Grade</td>
+                        <td>Total Grade</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="entry : ${studentsList}">
+                        <td th:text="${entry.key}"></td>
+                        <td th:text="${entry.value.getStudentId()}"></td>
+                        <td>
+                            <input type="text" th:value="${entry.value.getFirstExam()}" />
+                        </td>
+                        <td>
+                            <input type="text" th:value="${entry.value.getSecondExam()}" />
+                        </td>
+
+                        <td>
+                            <input type="text" th:value="${entry.value.getFinalExam()}" />
+                        </td>
+
+                        <td>
+                            <input type="text" th:value="${entry.value.getTotalGrade()}" />
+                        </td>
+                        <td>
+
+                            <button type="button" onclick="saveRemarks('${entry.value.getStudentId()}')">Save Remarks</button>
+
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+    </div>
         </form>
-             <h3>Selected Course Information:</h3>
-             <p><strong>Course ID:</strong> <span th:text="${selectedCourseId}"></span></p>
-             <p><strong>Course Name:</strong> <span th:text="${selectedCourseName}"></span></p>
-             <h3>Students and Remarks:</h3>
-             <table>
-                 <tr>
-                     <th>Student ID</th>
-                     <th>Student Name</th>
-                     <th th:text="${remarks1}">Remarks 1</th>
-                     <th th:text="${remarks2}">Remarks 2</th>
-                     <th>Final Grade</th>
-                     <th>Total Grade</th>
-                     <th>Actions</th>
-                 </tr>
-                 <tbody id="studentsTableBody">
-                 <tr th:each="student : ${studentsList}">
-                     <td th:text="${student.getStudentId()}"></td>
-                     <td >ssss</td>
-                     <!--<td th:text="${student.studentName}"></td>-->
-                     <td>
-                         <input type="text" th:field="${student.getFirstExam()}" />
-                     </td>
-                     <td>
-                         <input type="text" th:field="${student.getSecondExam()}" />
-                     </td>
-                         <input type="text" th:field="${student.getFinalExam()}" />
-                     </td>
-                         <input type="text" th:field="${student.getTotalGrade()}" />
-                     </td>
-                     <td>
-                         <button type="button">Save</button>
-                     </td>
-                 </tr>
-                 </tbody>
-             </table>
 
-         </div>
-     </div>
-     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-     <script>
-          function showContent(contentId) {
-              const allContainers = document.getElementsByClassName('result-container');
-              for (let i = 0; i < allContainers.length; i++) {
-                  allContainers[i].style.display = 'none';
-              }
-              const containerToShow = document.getElementById(contentId);
-              containerToShow.style.display = 'block';
-          }
 
-             $(document).ready(function () {
-             $(".save-button").click(function () {
-                 var studentId = $(this).closest("tr").find("td:nth-child(1)").text();
-                 var remarks1 = $(this).closest("tr").find("td:nth-child(3) input").val();
-                 var remarks2 = $(this).closest("tr").find("td:nth-child(4) input").val();
-                 var finalGrade = $(this).closest("tr").find("td:nth-child(4) input").val();
-                 var totalGrade = $(this).closest("tr").find("td:nth-child(4) input").val();
 
-                 var data = {
-                     studentId: studentId,
-                     remarks1: remarks1,
-                     remarks2: remarks2,
-                     finalGrade:finalGrade,
-                     totalGrade:totalGrade,
-                 };
 
-                 $.ajax({
-                     type: "POST",
-                     url: "/login/instructor/saveRemarks",
-                     data: JSON.stringify(data),
-                     contentType: "application/json",
-                     dataType: "json",
-                     success: function (response) {
-                         console.log(response);
-                     },
-                     error: function (error) {
-                         console.error(error);
-                     }
-                 });
-             });
-         });
-      </script>
-    </body>
-    </html>
+    </div>
+
+    <div id="CalculateStatisticalData" class="result-container" style="display: none;">
+
+        <p th:each="course : ${courseList}">
+            Course ID: <span th:text="${course.id}"></span><br>
+            Course Name: <span th:text="${course.courseName}"></span><br>
+            Number of Students: <span th:text="${course.numberOfStudents}"></span><br>
+        <hr>
+
+        <form action="/GenerateCSV" method="get">
+            <p> course id : <input type="text" id="CSV"  name="courseIdCSV"></p>
+            <p> my id : <input type="text"  id="iiD" name="myId"></p>
+
+            <input type="submit" value="csv file">
+        </form>
+    </div>
+</div>
+
+<script>
+function showContent(contentId) {
+    const allContainers = document.getElementsByClassName('result-container');
+    for (let i = 0; i < allContainers.length; i++) {
+        allContainers[i].style.display = 'none';
+    }
+    const containerToShow = document.getElementById(contentId);
+    containerToShow.style.display = 'block';
+}
+
+       async function saveRemarks(studentId) {
+
+
+
+                        const data = {
+                            selectedStudentId: "015",
+                            midExam: 0,
+                            quizzes: 0,
+                            firstExam: 0,
+                            secondExam: 0,
+                            finalExam: 0,
+                            totalGrade: 0,
+                            courseId:3,
+                            id:"11"
+
+                        };
+                                            console.log(data);
+                  // Send the data to the server using AJAX with POST method
+                  fetch("/login/instructor/SaveMarks", {
+                      method: "POST",
+                      headers: {
+                          "Content-Type": "application/json"
+                      },
+                      body: JSON.stringify(data)
+                  })
+                  .then(response => response.json())
+                  .then(result => {
+                      if (result.success) {
+                          alert("Remarks saved successfully!");
+                      } else {
+                          alert("Error while saving remarks.");
+                      }
+                  })
+                  .catch(error => {
+                      console.error("Error:", error);
+                      alert("An error occurred while processing the request.");
+                  });
+            }
+
+
+ </script>
+</body>
+</html>

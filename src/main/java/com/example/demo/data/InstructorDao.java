@@ -1,5 +1,6 @@
 package com.example.demo.data;
 
+import com.example.demo.controllers.SaveMarksController;
 import com.example.demo.models.Course;
 import com.example.demo.models.Grade;
 import com.example.demo.models.StudentCourse;
@@ -15,7 +16,7 @@ public interface InstructorDao {
 
     public void addCourseCriteria(String gradeType, String examType, Course course);
 
-    public void addGradesForStudents(Course course, Grade grade);
+    public void addGradesForStudents(SaveMarksController.Grades2 grade);
 
     public void getStudentsInformation(String studentId, List<StudentGrade> studentGrades, List<StudentCourse> studentCourses);
 }

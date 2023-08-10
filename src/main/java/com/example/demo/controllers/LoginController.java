@@ -49,7 +49,8 @@ public class LoginController {
                     session.setAttribute("id", id);
                    return  "redirect:/login/admin";
                 case "Student":
-                    return "student";
+                    session.setAttribute("id", id);
+                    return  "redirect:/login/student";
                 default:
                     model.addAttribute("errorMessage", "Invalid User Type!");
                     return "login";

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.example.demo.controllers.SaveMarksController;
 import com.example.demo.models.Course;
 import com.example.demo.models.Grade;
 import com.example.demo.models.StudentCourse;
@@ -91,9 +92,9 @@ public class Instructor implements InstructorDao{
     }
 
     @Override
-    public void addGradesForStudents(Course course, Grade grade) {
+    public void addGradesForStudents(SaveMarksController.Grades2 grade) {
         String examTypeColumn, firstExamColumn, secondExamColumn, finalExamColumn;
-        if (course.getExamType() == 1) {
+        if (grade.getMidExam() > 0) {
             firstExamColumn = "mid_exam";
             secondExamColumn = "quizzes";
             finalExamColumn = "final_exam";
@@ -103,7 +104,7 @@ public class Instructor implements InstructorDao{
 
             try {
                 int rowsAffected = jdbcTemplate.update(query, grade.getMidExam(), grade.getQuizzes(), grade.getFinalExam(),
-                        grade.getStudentId(), course.getId());
+                        grade.getStudentId(), grade.getCourseId());
 
                 if (rowsAffected > 0) {
                     System.out.println("Data updated successfully.");
@@ -123,7 +124,7 @@ public class Instructor implements InstructorDao{
 
             try {
                 int rowsAffected = jdbcTemplate.update(query, grade.getMidExam(), grade.getQuizzes(), grade.getFinalExam(),
-                        grade.getStudentId(), course.getId());
+                        grade.getStudentId(), grade.getCourseId());
 
                 if (rowsAffected > 0) {
                     System.out.println("Data updated successfully.");

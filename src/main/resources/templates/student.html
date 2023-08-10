@@ -1,0 +1,224 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<html>
+
+<head>
+  <title>Student Page</title>
+</head>
+
+<style>
+      @import url(https://fonts.googleapis.com/css?family=Roboto:300);
+     body, h1, h2, p, ul, li, button {
+         margin: 0;
+         padding: 0;
+         box-sizing: border-box;
+     }
+
+     body {
+         font-family: Arial, sans-serif;
+         background-color: #f0f0f0;
+     }
+
+     .header {
+         background-color: #007BFF;
+         color: #fff;
+         padding: 10px;
+         text-align: center;
+     }
+
+     .header h1 {
+         font-size: 24px;
+         margin: 0;
+     }
+
+     .logout-btn {
+         color: #fff;
+         text-decoration: none;
+         font-size: 16px;
+         margin-right: 20px;
+         margin-top: 20px;
+         float: right;
+     }
+
+     .info-container {
+         background-color: #fff;
+         padding: 20px;
+         margin: 20px;
+         border-radius: 5px;
+         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+     }
+
+     .options {
+         list-style: none;
+         padding: 0;
+         margin: 20px;
+
+     }
+
+     .option-btn {
+         background-color: #007BFF;
+         color: #fff;
+         border: none;
+         padding: 10px 20px;
+         border-radius: 5px;
+         cursor: pointer;
+         margin-bottom: 10px;
+     }
+
+     .option-btn:hover {
+         background-color: #0056b3;
+     }
+
+     .result-container {
+         background-color: #fff;
+         padding: 20px;
+         margin: 20px;
+         border-radius: 5px;
+         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+     }
+
+     .result-container p {
+         margin-bottom: 10px;
+     }
+
+     .result-container table {
+         border-collapse: collapse;
+         width: 100%;
+     }
+
+     .result-container th, .result-container td {
+         border: 1px solid #ddd;
+         padding: 8px;
+         text-align: left;
+     }
+
+     .result-container th {
+         background-color: #f2f2f2;
+     }
+
+     .result-container tr:nth-child(even) {
+         background-color: #f2f2f2;
+     }
+
+     .result-container tr:hover {
+         background-color: #ddd;
+     }
+
+        .logout-btn {
+            background-color: #dc3545;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+
+        .logout-btn:hover {
+            background-color: #555;
+        }
+      body {
+        background: #76b852; /* fallback for old browsers */
+        background: rgb(141,194,111);
+        background: linear-gradient(90deg, rgba(141,194,111,1) 0%, rgba(118,184,82,1) 50%);
+        font-family: "Roboto", sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+
+       table {
+           border-collapse: collapse;
+           width: 50%;
+           margin: auto;
+           margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 30px;
+        }
+    </style>
+<div class="info-container">
+  <p><strong>Student ID: <span th:text="${StudentId}"></span></strong></p>
+  <p><strong>Name: <span th:text  ="${StudentName}"></span></strong></p>
+</div>
+
+<div class="container">
+  <h2>Select an option:</h2>
+  <ul class="options">
+    <li><button class="option-btn" onclick="showContent('courseInfoContainer')">See My Courses Information</button></li>
+    <li><button class="option-btn" onclick="showContent('gradesContainer')">>See Grades and My Students Information</button></li>
+  </ul>
+  <a href="logout" class="logout-btn">Log Out</a>
+  <div id="courseInfoContainer" class="result-container" style="display: none;">
+    <h2>Course Information</h2>
+
+      <div th:each="course : ${courseMap}">
+        <p> Course Name: <span th:text="${course.key}"></span></p>
+        <p>Instructor Name: <span th:text="${course.value}"></span></p>
+        <hr>
+
+    </div>
+
+  </div>
+  <div id="gradesContainer" class="result-container" style="display: block;">
+
+      <h3>Remarks:</h3>
+      <div>
+          <table>
+            <tr>
+              <th>Course Name</th>
+              <th>Instructor Name</th>
+              <th>Grade 1</th>
+              <th>Grade 2</th>
+              <th>Grade 3</th>
+              <th>Grade 4</th>
+              <th>Grade 5</th>
+              <th>Total</th>
+            </tr>
+            <tr th:each="grade : ${gradesInfo}">
+              <td th:text="${grade.getCourseName()}"></td>
+              <td th:text="${grade.getInstructorName}"></td>
+              <td th:text="${grade.getFirstExam()}"></td>
+              <td th:text="${grade.getSecondExam()}"></td>
+              <td th:text="${grade.getFinalExam()}"></td>
+              <td th:text="${grade.getMidExam()}"></td>
+              <td th:text="${grade.getQuizzes()}"></td>
+              <!--<td th:text="${(grade.getTotalGrade()}"></td>-->
+            </tr>
+          </table>
+        </div>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+function showContent(contentId) {
+    const allContainers = document.getElementsByClassName('result-container');
+    for (let i = 0; i < allContainers.length; i++) {
+        allContainers[i].style.display = 'none';
+    }
+    const containerToShow = document.getElementById(contentId);
+    containerToShow.style.display = 'block';
+}
+
+
+
+
+ </script>
+</body>
+</html>
