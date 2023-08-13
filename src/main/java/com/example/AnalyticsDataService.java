@@ -7,14 +7,20 @@ import java.util.List;
 
 @Service
 public class AnalyticsDataService {
-    @Autowired
+
     private AnalyticsDataRepository analyticsDataRepository;
+
+    public AnalyticsDataService(AnalyticsDataRepository analyticsDataRepository) {
+        this.analyticsDataRepository = analyticsDataRepository;
+    }
 
     public void saveAnalyticsData(Double average, Double min, Double max) {
         AnalyticsData analyticsData = new AnalyticsData();
         analyticsData.setAverage(average);
         analyticsData.setMin(min);
         analyticsData.setMax(max);
+        System.out.println("analyticsData.getMax()");
+        System.out.println(analyticsData.getMax());
         analyticsDataRepository.save(analyticsData);
     }
 

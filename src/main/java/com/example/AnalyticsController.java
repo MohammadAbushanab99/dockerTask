@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -15,12 +15,14 @@ import java.util.List;
 public class AnalyticsController {
     @Autowired
     private final JdbcTemplate jdbcTemplate;
+    private AnalyticsDataRepository analyticsDataRepository;
 
-    public AnalyticsController(JdbcTemplate jdbcTemplate) {
+    public AnalyticsController(JdbcTemplate jdbcTemplate, AnalyticsDataRepository analyticsDataRepository) {
         this.jdbcTemplate = jdbcTemplate;
+        this.analyticsDataRepository = analyticsDataRepository;
     }
 
-    @GetMapping("/calculate-analytics")
+    @PostMapping("/calculate-analytics")
     public String calculateAndSaveAnalytics(Model model) {
 
         List<Integer> numbers =getAllAnalyticsData();
@@ -32,7 +34,7 @@ public class AnalyticsController {
                     .mapToInt(Integer::intValue)
                     .average()
                     .orElse(0.0);
-            AnalyticsDataService analyticsDataService = new AnalyticsDataService();
+            AnalyticsDataService analyticsDataService = new AnalyticsDataService(analyticsDataRepository);
             analyticsDataService.saveAnalyticsData(average,(double)min,(double)max);
 
             model.addAttribute("message", "Analytics data calculated and saved.");
