@@ -1,37 +1,39 @@
 package com.example;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class AnalyticsController {
-    private final NumberEntryRepository numberEntryRepository;
-    private final AnalyticsDataService analyticsDataService;
+    @Autowired
+    private final JdbcTemplate jdbcTemplate;
 
-    public AnalyticsController(NumberEntryRepository numberEntryRepository, AnalyticsDataService analyticsDataService) {
-        this.numberEntryRepository = numberEntryRepository;
-        this.analyticsDataService = analyticsDataService;
+    public AnalyticsController(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     @GetMapping("/calculate-analytics")
     public String calculateAndSaveAnalytics(Model model) {
-        List<NumberEntry> numberEntries = numberEntryRepository.findAll();
 
-        if (!numberEntries.isEmpty()) {
-            List<Double> numbers = extractNumbersFromEntries(numberEntries);
-            double average = calculateAverage(numbers);
-            double min = Collections.min(numbers);
-            double max = Collections.max(numbers);
-            analyticsDataService.saveAnalyticsData(average, min, max);
+        List<Integer> numbers =getAllAnalyticsData();
+        if (!numbers.isEmpty()) {
+
+            int min = Collections.min(numbers);
+            int max = Collections.max(numbers);
+            double average = numbers.stream()
+                    .mapToInt(Integer::intValue)
+                    .average()
+                    .orElse(0.0);
+            AnalyticsDataService analyticsDataService = new AnalyticsDataService();
+            analyticsDataService.saveAnalyticsData(average,(double)min,(double)max);
 
             model.addAttribute("message", "Analytics data calculated and saved.");
         } else {
@@ -41,17 +43,15 @@ public class AnalyticsController {
         return "analytics-result"; // Return the name of the Thymeleaf template
     }
 
-    private List<Double> extractNumbersFromEntries(List<NumberEntry> numberEntries) {
-        return numberEntries.stream()
-                .map(NumberEntry::getValue)
-                .collect(Collectors.toList());
-    }
+    public List<Integer> getAllAnalyticsData() {
+        List<Integer> numbers = new ArrayList<>();
+        try {
+            String selectQuery = "SELECT value FROM number_entry";
+            numbers = jdbcTemplate.queryForList(selectQuery, Integer.class);
 
-    private double calculateAverage(List<Double> numbers) {
-        double sum = 0;
-        for (double num : numbers) {
-            sum += num;
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        return sum / numbers.size();
+        return numbers;
     }
 }

@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
@@ -21,15 +22,21 @@ public class LoginController {
         this.numberEntryService = numberEntryService;
         this.analyticsDataService = analyticsDataService;
     }
-
+    @GetMapping("/login")
+    public String showLoginForm() {
+        return "login";
+    }
 
     @PostMapping("/login")
     public String processLogin(@RequestParam String username, @RequestParam String password, RedirectAttributes redirectAttributes) {
+        System.out.println("hello");
         if (authService.authenticate(username, password)) {
+
             return "redirect:/dashboard";
         } else {
+            System.out.println("hi");
             redirectAttributes.addFlashAttribute("error", "Invalid credentials. Please try again.");
-            return "redirect:/login";
+            return "login";
         }
     }
 }

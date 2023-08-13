@@ -6,11 +6,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class AuthService {
     @Autowired
-    private UserRepository userRepository;
+    private UserRepository usersRepository;
+
 
     public boolean authenticate(String username, String password) {
-        User user = userRepository.findByUsername(username);
-        if (user != null && user.getPassword().equals(password)) {
+        String user = usersRepository.checkUserInput(username,password);
+        if (user != null && user.equals(password)) {
             return true;
         }
         return false;
