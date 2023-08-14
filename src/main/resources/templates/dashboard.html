@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <title>Docker Task!!</title>
     <style>
@@ -126,10 +126,42 @@
         <button>send numbers</button>
     </form>
     <form class="login-form" action="/calculate-analytics" method="POST">
-    <button>show result</button>
+    <button >show result</button>
     </form>
+
 </div>
+    <h1>Analytics Data</h1>
+
+    <a th:href="@{/getResult}"  id="showAnalyticsButton">Get Analytics Data</a>
+
+    <div id="analyticsTableContainer" >
+        <table>
+            <tr>
+                <th>Average</th>
+                <th>Min</th>
+                <th>Max</th>
+            </tr>
+            <tr>
+                <td th:text="${average}"></td>
+                <td th:text="${min}"></td>
+                <td th:text="${max}"></td>
+            </tr>
+        </table>
+    </div>
 
 
+
+
+
+<script>
+    document.getElementById("showAnalyticsButton").addEventListener("click", function() {
+        var tableContainer = document.getElementById("analyticsTableContainer");
+        if (tableContainer.style.display === "none") {
+            tableContainer.style.display = "block";
+        } else {
+            tableContainer.style.display = "none";
+        }
+    });
+</script>
 </body>
 </html>

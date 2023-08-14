@@ -1,23 +1,22 @@
 package com.example;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
-public class NumberEntryService {
+public class NumberEntryService{
+    private final JdbcTemplate jdbcTemplate;
 
-    private List<Double> numbers;
-    @Autowired
-    private NumberEntryRepository numberEntryRepository;
-
-
-    public void saveNumberEntry(Double value) {
-        NumberEntry numberEntry = new NumberEntry();
-        numberEntry.setValue(value);
-        numberEntryRepository.save(numberEntry);
+    public NumberEntryService(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
     }
 
 
+    public void saveNumbers(int number1, int number2, int number3) {
+        String insertQuery = "INSERT INTO number_entry (value) VALUES (?)";
+
+        jdbcTemplate.update(insertQuery, number1);
+        jdbcTemplate.update(insertQuery, number2);
+        jdbcTemplate.update(insertQuery, number3);
+    }
 }

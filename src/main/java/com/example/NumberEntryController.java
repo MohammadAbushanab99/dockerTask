@@ -10,11 +10,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class NumberEntryController {
-    @Autowired
-    private final JdbcTemplate jdbcTemplate;
+    private final NumberEntryService numberEntryService;
 
-    public NumberEntryController(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+    public NumberEntryController(NumberEntryService numberEntryService) {
+        this.numberEntryService = numberEntryService;
     }
 
     @GetMapping("/dashboard")
@@ -30,12 +29,7 @@ public class NumberEntryController {
             RedirectAttributes redirectAttributes
     ) {
 
-        System.out.println("insertData");
-        String insertQuery = "INSERT INTO number_entry (value) VALUES (?)";
-
-        jdbcTemplate.update(insertQuery, Integer.parseInt(number1));
-        jdbcTemplate.update(insertQuery, Integer.parseInt(number2));
-        jdbcTemplate.update(insertQuery, Integer.parseInt(number3));
+        numberEntryService.saveNumbers(Integer.parseInt(number1), Integer.parseInt(number2), Integer.parseInt(number3));
 
         redirectAttributes.addFlashAttribute("success", "Numbers saved successfully.");
         return "redirect:/dashboard";
