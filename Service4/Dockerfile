@@ -1,8 +1,6 @@
 FROM openjdk:17
 
-WORKDIR /app
-
-COPY ./target/Service4-0.0.1-SNAPSHOT.jar /app
+COPY ./target/Service4-0.0.1-SNAPSHOT.jar Service4-0.0.1-SNAPSHOT.jar
 
 EXPOSE 5000
 

@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  service4:
+    build:
+      context: ./Service4
+    ports:
+      - 5000:5000
+    depends_on:
+      - mysql
+      - mongodb
+  service1:
+    build:
+      context: ./Service1
+    ports:
+      - 5001:5001
+    depends_on:
+      - mysql
+      - mongodb
+  service2:
+    build:
+      context: ./Service2
+    ports:
+      - 5002:5002
+    depends_on:
+      - mysql
+      - mongodb
+  service3:
+    build:
+      context: ./Service3
+    ports:
+      - 5003:5003
+    depends_on:
+      - mysql
+      - mongodb
+
+  mysql:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: 1234
+      MYSQL_DATABASE: dockerTask
+    ports:
+      - 3307:3306
+
+  mongodb:
+    image: mongo:latest
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin123
+      MONGO_INITDB_DATABASE: mongodb
+    ports:
+      - 27018:27017
